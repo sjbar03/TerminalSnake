@@ -193,7 +193,7 @@ void Board::start()
       break;
     };
 
-    if (iterations % 25 == 0)
+    if (iterations % 40 == 0)
     {
       s.shift();
       reset();
