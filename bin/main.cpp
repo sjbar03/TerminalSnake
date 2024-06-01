@@ -1,5 +1,5 @@
 #include "board.h"
-#include <unistd.h>
+
 #include <iostream>
 #include <string>
 #include <ncurses.h>
@@ -21,15 +21,7 @@ int main()
 
   Board b = Board();
 
-  int iterations = 0;
-
-  while (1)
-  {
-    b.step(iterations);
-
-    usleep(2500);
-    iterations += 1;
-  }
+  b.start();
 
   endwin();
 }

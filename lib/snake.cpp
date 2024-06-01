@@ -17,7 +17,8 @@ Snake::Snake(int x, int y)
 void Snake::reset(int x, int y)
 {
   SNAKE_SIZE = 1;
-  snake[0] = std::make_tuple(x, y);
+  snake.clear();
+  snake.insert(snake.begin(), std::make_tuple(x, y));
 }
 
 void Snake::grow()
@@ -60,6 +61,10 @@ void Snake::shift()
     }
     else
     {
+      if (i == SNAKE_SIZE - 1 && SNAKE_SIZE > snake.size())
+      {
+        snake.push_back(snake[i - 1]);
+      }
       snake[i] = snake[i - 1];
     }
   }

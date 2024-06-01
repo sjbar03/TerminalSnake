@@ -15,10 +15,14 @@ namespace brd
     void reset();
     void placeSnake(snk::Snake);
     void placeFood();
-    void step(int);
+    void start();
     void checkFood();
+    bool isRunning();
+    void stop();
 
   private:
+    int iterations;
+    bool running;
     snk::Snake s;
     food::Food f;
   };

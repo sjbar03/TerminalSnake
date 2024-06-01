@@ -1,4 +1,5 @@
 #include <tuple>
+#include <vector>
 
 #ifndef SNAKE_H
 #define SNAKE_H
@@ -22,7 +23,7 @@ namespace snk
     int getDir();
 
   private:
-    Coord snake[500];
+    std::vector<Coord> snake;
     int SNAKE_SIZE = 1;
     int DIR = 0;
   };

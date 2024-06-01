@@ -5,6 +5,7 @@
 #include <iostream>
 #include <ncurses.h>
 #include <stdlib.h>
+#include <unistd.h>
 using namespace std;
 using namespace brd;
 using namespace snk;
@@ -30,6 +31,7 @@ Board::Board()
 {
   s = Snake(W / 2, H / 2);
   f = Food(W, H);
+  iterations = 0;
   reset();
 }
 
@@ -65,6 +67,7 @@ void Board::print()
 
 void Board::reset()
 {
+
   for (int x = 0; x < W; ++x)
   {
     for (int y = 0; y < H; ++y)
@@ -89,11 +92,16 @@ void Board::placeSnake(Snake s)
     int y = get<1>(s.get(i));
     if (board[y][x] == 1)
     {
-      cout << "Hit";
-      exit(1);
+      cout << "Hit\n";
+      stop();
     }
     board[y][x] = 1;
   }
+}
+
+void Board::stop()
+{
+  running = false;
 }
 
 int height()
@@ -144,51 +152,63 @@ void Board::checkFood()
   }
 }
 
-void Board::step(int gen)
+bool Board::isRunning()
 {
+  return running;
+}
 
-  switch (getch())
-  {
-  case W_KEY:
-    if (s.getDir() != SOUTH)
-    {
-      s.changeDir(NORTH);
-    }
-    break;
-  case A_KEY:
-    if (s.getDir() != EAST)
-    {
-      s.changeDir(WEST);
-    }
-    break;
-  case S_KEY:
-    if (s.getDir() != NORTH)
-    {
-      s.changeDir(SOUTH);
-    }
-    break;
-  case D_KEY:
-    if (s.getDir() != WEST)
-    {
-      s.changeDir(EAST);
-    }
-    break;
-  default:
-    break;
-  };
+void Board::start()
+{
+  running = true;
 
-  if (gen % 50 == 0)
+  while (isRunning())
   {
-    s.shift();
-    reset();
-    if (gen % 800 == 0)
+    switch (getch())
     {
-      f.spawnFood();
+    case W_KEY:
+      if (s.getDir() != SOUTH)
+      {
+        s.changeDir(NORTH);
+      }
+      break;
+    case A_KEY:
+      if (s.getDir() != EAST)
+      {
+        s.changeDir(WEST);
+      }
+      break;
+    case S_KEY:
+      if (s.getDir() != NORTH)
+      {
+        s.changeDir(SOUTH);
+      }
+      break;
+    case D_KEY:
+      if (s.getDir() != WEST)
+      {
+        s.changeDir(EAST);
+      }
+      break;
+    default:
+      break;
+    };
+
+    if (iterations % 25 == 0)
+    {
+      s.shift();
+      reset();
+      if (iterations % 800 == 0)
+      {
+        f.spawnFood();
+      }
+      placeFood();
+      placeSnake(s);
+      checkFood();
+      print();
+      refresh();
     }
-    placeFood();
-    placeSnake(s);
-    checkFood();
-    print();
-    refresh();
+
+    iterations += 1;
+    usleep(2500);
   }
 }
