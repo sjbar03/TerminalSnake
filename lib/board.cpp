@@ -63,6 +63,7 @@ void Board::print()
     }
     printw("\n");
   }
+  printw("Score: %i", s.getScore());
 }
 
 void Board::reset()

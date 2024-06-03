@@ -21,11 +21,13 @@ namespace snk
     Coord get(int);
     void changeDir(int);
     int getDir();
+    int getScore();
 
   private:
     std::vector<Coord> snake;
-    int SNAKE_SIZE = 1;
-    int DIR = 0;
+    int SNAKE_SIZE;
+    int DIR;
+    int score;
   };
 }
 

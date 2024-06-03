@@ -11,11 +11,15 @@ Snake::Snake() {}
 
 Snake::Snake(int x, int y)
 {
+  SNAKE_SIZE = 1;
+  DIR = 0;
+  score = 0;
   reset(x, y);
 }
 
 void Snake::reset(int x, int y)
 {
+  score = 0;
   SNAKE_SIZE = 1;
   snake.clear();
   snake.insert(snake.begin(), std::make_tuple(x, y));
@@ -24,6 +28,7 @@ void Snake::reset(int x, int y)
 void Snake::grow()
 {
   SNAKE_SIZE += 1;
+  score += 1;
 }
 
 void Snake::shift()
@@ -93,4 +98,9 @@ void Snake::changeDir(int d)
 int Snake::getDir()
 {
   return DIR;
+}
+
+int Snake::getScore()
+{
+  return score;
 }
