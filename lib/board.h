@@ -19,6 +19,7 @@ namespace brd
     void checkFood();
     bool isRunning();
     void stop();
+    void recordScore(std::string);
 
   private:
     int iterations;

@@ -1,0 +1,14 @@
+ __  __                          __               ____    ___                        
+/\ \/\ \                        /\ \__           /\  _`\ /\_ \                       
+\ \ \_\ \    ___   __  __  __   \ \ ,_\   ___    \ \ \L\ \//\ \      __    __  __    
+ \ \  _  \  / __`\/\ \/\ \/\ \   \ \ \/  / __`\   \ \ ,__/ \ \ \   /'__`\ /\ \/\ \   
+  \ \ \ \ \/\ \L\ \ \ \_/ \_/ \   \ \ \_/\ \L\ \   \ \ \/   \_\ \_/\ \L\.\\ \ \_\ \  
+   \ \_\ \_\ \____/\ \___x___/'    \ \__\ \____/    \ \_\   /\____\ \__/.\_\/`____ \ 
+    \/_/\/_/\/___/  \/__//__/       \/__/\/___/      \/_/   \/____/\/__/\/_/`/___/> \
+                                                                               /\___/
+                                                                               \/__/ 
+  Welcome to my snake clone! 
+  - To play, press 1 from the main menu. 
+  - To control the snake, use the W, A, S, and D keys
+  - Collect red squares to grow, and avoid the edges and your tail.
+  - After the game, feel free to save your score following the provided instructions.

@@ -2,7 +2,9 @@
 #include "snake.h"
 #include "food.h"
 #include <tuple>
+#include <chrono>
 #include <iostream>
+#include <fstream>
 #include <ncurses.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -212,4 +214,24 @@ void Board::start()
     iterations += 1;
     usleep(2500);
   }
+}
+
+void Board::recordScore(string usr)
+{
+  int score = s.getScore();
+
+  auto now = std::chrono::system_clock::now();
+  std::time_t time = std::chrono::system_clock::to_time_t(now);
+  auto date = std::ctime(&time);
+
+  ofstream scores("data/scores.csv", std::ios::app);
+
+  if (!scores.is_open())
+  {
+    ofstream scores("data/scores.csv");
+  }
+
+  scores << usr << "," << score << "," << date;
+
+  scores.close();
 }

@@ -1,20 +1,23 @@
 OBJ = main.o board.o snake.o food.o
+STD = -std=c++20
+LFLAG = -lncurses
+CC = clang++
 
 
 snake : $(OBJ)
-	clang++ -o snake $(OBJ) -lncurses -std=c++17
+	$(CC) -o $@ $(OBJ) $(LFLAG) $(STD)
 
 main.o: main.cpp board.h
-	clang++ -c main.cpp -std=c++17
+	$(CC) -c main.cpp $(STD)
 
 board.o: board.cpp snake.h food.h
-	clang++ -c board.cpp -std=c++17
+	$(CC) -c board.cpp $(STD)
 
 snake.o: snake.cpp
-	clang++ -c snake.cpp -std=c++17
+	$(CC) -c snake.cpp $(STD)
 
 food.o: food.cpp
-	clang++ -c food.cpp -std=c++17
+	$(CC) -c food.cpp $(STD)
 
 clean:
 	rm snake $(OBJ)
