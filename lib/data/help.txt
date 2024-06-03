@@ -10,5 +10,6 @@
   Welcome to my snake clone! 
   - To play, press 1 from the main menu. 
   - To control the snake, use the W, A, S, and D keys
+  - To pause, press P. To unpause press any key.
   - Collect red squares to grow, and avoid the edges and your tail.
   - After the game, feel free to save your score following the provided instructions.

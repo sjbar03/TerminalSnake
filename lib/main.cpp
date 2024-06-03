@@ -57,19 +57,27 @@ void play()
   printw("\nWould you like to save this score? y/n\n");
   nodelay(stdscr, false);
 
-  switch (getch())
+  bool answered = false;
+
+  while (!answered)
   {
-  case (Y_KEY):
-    nocbreak();
-    echo();
-    printw("Enter your username: ");
-    b.recordScore(getstring());
-    break;
-  case (N_KEY):
-    break;
-  default:
-    break;
+    switch (getch())
+    {
+    case (Y_KEY):
+      nocbreak();
+      echo();
+      printw("Enter your username: ");
+      b.recordScore(getstring());
+      answered = true;
+      break;
+    case (N_KEY):
+      answered = true;
+      break;
+    default:
+      break;
+    }
   }
+
   endwin();
 }
 
@@ -120,11 +128,21 @@ void printUsage()
   string line;
   ifstream help("data/help.txt");
 
+  int i = 1;
+
   while (getline(help, line))
   {
-    printw((center(80, line)).c_str());
+    if (i < 10)
+    {
+      printw((center(80, line)).c_str());
+    }
+    else
+    {
+      printw(line.c_str());
+    }
     printw("\n");
     refresh();
+    i++;
   }
   getch();
   help.close();
@@ -186,7 +204,15 @@ void menu()
   endwin();
 }
 
+void test()
+{
+  initscr();
+  cout << getch();
+  endwin();
+}
+
 int main()
 {
+  // test();
   menu();
 }

@@ -27,6 +27,8 @@ using namespace food;
 #define S_KEY 115
 #define D_KEY 100
 
+#define P_KEY 112
+
 int board[H][W];
 
 Board::Board()
@@ -191,6 +193,11 @@ void Board::start()
       {
         s.changeDir(EAST);
       }
+      break;
+    case P_KEY:
+      nodelay(stdscr, false);
+      getch();
+      nodelay(stdscr, true);
       break;
     default:
       break;
