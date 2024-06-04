@@ -3,11 +3,11 @@
 #include "food.h"
 #include <tuple>
 #include <chrono>
-#include <iostream>
 #include <fstream>
 #include <ncurses.h>
 #include <stdlib.h>
 #include <unistd.h>
+
 using namespace std;
 using namespace brd;
 using namespace snk;
@@ -98,7 +98,6 @@ void Board::placeSnake(Snake s)
     int y = get<1>(s.get(i));
     if (board[y][x] == 1)
     {
-      cout << "Hit\n";
       stop();
     }
     board[y][x] = 1;
