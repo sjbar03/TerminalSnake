@@ -81,6 +81,13 @@ void play()
   endwin();
 }
 
+bool compareEntry(vector<string> e1, vector<string> e2)
+{
+  int e1s = stoi(e1.at(1));
+  int e2s = stoi(e2.at(1));
+  return e1s > e2s;
+}
+
 void printRecord()
 {
   clear();
@@ -89,10 +96,20 @@ void printRecord()
   ifstream scores("data/scores.csv");
   stringstream ss;
 
+  vector<vector<string>> entries;
+
   while (getline(scores, line))
   {
     auto entry = split(line, ',');
+    entries.push_back(entry);
+  }
 
+  sort(entries.begin() + 1, entries.end(), compareEntry); // Skip first line for header
+
+  while (!entries.empty())
+  {
+    auto entry = entries.front();
+    entries.erase(entries.begin());
     while (!entry.empty())
     {
       ss << setw(20) << left << entry.front();
@@ -213,6 +230,5 @@ void test()
 
 int main()
 {
-  // test();
   menu();
 }

@@ -30,6 +30,7 @@ using namespace food;
 #define P_KEY 112
 
 int board[H][W];
+vector<int> inputBuffer;
 
 Board::Board()
 {
@@ -173,25 +174,25 @@ void Board::start()
     case W_KEY:
       if (s.getDir() != SOUTH)
       {
-        s.changeDir(NORTH);
+        inputBuffer.push_back(NORTH);
       }
       break;
     case A_KEY:
       if (s.getDir() != EAST)
       {
-        s.changeDir(WEST);
+        inputBuffer.push_back(WEST);
       }
       break;
     case S_KEY:
       if (s.getDir() != NORTH)
       {
-        s.changeDir(SOUTH);
+        inputBuffer.push_back(SOUTH);
       }
       break;
     case D_KEY:
       if (s.getDir() != WEST)
       {
-        s.changeDir(EAST);
+        inputBuffer.push_back(EAST);
       }
       break;
     case P_KEY:
@@ -205,6 +206,11 @@ void Board::start()
 
     if (iterations % 40 == 0)
     {
+      if (!inputBuffer.empty())
+      {
+        s.changeDir(inputBuffer.front());
+        inputBuffer.erase(inputBuffer.begin());
+      }
       s.shift();
       reset();
       if (iterations % 800 == 0)
