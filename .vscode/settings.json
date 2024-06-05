@@ -52,7 +52,10 @@
     "typeinfo": "cpp",
     "unordered_map": "cpp",
     "variant": "cpp",
-    "vector": "cpp"
+    "vector": "cpp",
+    "thread": "cpp",
+    "fstream": "cpp",
+    "iomanip": "cpp"
   },
   "C_Cpp.intelliSenseEngineFallback": "disabled",
   "C_Cpp.errorSquiggles": "enabled"
