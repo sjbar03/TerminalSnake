@@ -34,26 +34,47 @@ std::vector<string> split(const string &s, char delim)
   return result;
 }
 
+string getString(KeyListener *l)
+{
+  string s;
+  char ch;
+  while (l->next() != '\n')
+  {
+    ch = l->pop();
+    cout << ch << std::flush;
+    s += ch;
+
+    while (l->isEmpty())
+    {
+      usleep(5000);
+    }
+  }
+  return s;
+}
+
 void play(KeyListener *l)
 {
   Board b = Board();
   b.start(l);
+  l->emptyQueue();
 
   cout << "Would you like to save your score? y/n" << endl;
   bool answered = false;
 
   string usr;
+
   while (!answered)
   {
-    l->emptyQueue();
-    l->pause();
-    usleep(5000);
-    cout << '\r';
+    while (l->isEmpty())
+    {
+      usleep(5000);
+    }
+
     switch (l->pop())
     {
     case 'y':
       cout << "Please enter your username" << endl;
-      cin >> usr;
+      usr = getString(l);
       b.recordScore(usr);
       answered = true;
       break;
@@ -63,8 +84,6 @@ void play(KeyListener *l)
     default:
       break;
     }
-    l->unpause();
-    usleep(5000);
   }
 }
 

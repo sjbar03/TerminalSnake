@@ -54,6 +54,8 @@ char get_unbuffered_input()
   return ch;
 }
 
+#endif
+
 void KeyListener::start()
 {
   listening = true;
@@ -65,16 +67,6 @@ void KeyListener::stop()
   listening = false;
 }
 
-void KeyListener::pause()
-{
-  paused = true;
-}
-
-void KeyListener::unpause()
-{
-  paused = false;
-}
-
 void KeyListener::quitIf(char ch)
 {
   quitCh = ch;
@@ -84,10 +76,7 @@ void KeyListener::listen()
 {
   while (isListening())
   {
-    while (paused)
-    {
-      usleep(50000);
-    }
+
     char ch = get_unbuffered_input();
     queueLock.lock();
     inputQueue.push_back(ch);
@@ -102,7 +91,10 @@ void KeyListener::listen()
 void KeyListener::emptyQueue()
 {
   queueLock.lock();
-  inputQueue.erase(inputQueue.begin(), inputQueue.end());
+  while (!isEmpty())
+  {
+    inputQueue.pop_back();
+  }
   queueLock.unlock();
 }
 
@@ -114,6 +106,19 @@ bool KeyListener::isEmpty()
 bool KeyListener::isListening()
 {
   return listening;
+}
+
+char KeyListener::next()
+{
+  char ch;
+  queueLock.lock();
+  if (!isEmpty())
+  {
+    ch = inputQueue.front();
+  }
+  queueLock.unlock();
+
+  return ch;
 }
 
 char KeyListener::pop()
@@ -129,5 +134,3 @@ char KeyListener::pop()
 
   return ch;
 }
-
-#endif

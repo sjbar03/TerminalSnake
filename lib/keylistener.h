@@ -11,20 +11,19 @@ namespace listener
   public:
     void start();
     void stop();
-    void pause();
-    void unpause();
-
     void listen();
+
     void emptyQueue();
     void quitIf(char);
 
     bool isEmpty();
     bool isListening();
+
+    char next();
     char pop();
 
   private:
     char quitCh;
-    bool paused;
     bool listening;
     std::vector<char> inputQueue;
     std::mutex queueLock;

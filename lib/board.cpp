@@ -8,6 +8,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <iostream>
+#include <sstream>
 
 using namespace std;
 using namespace brd;
@@ -15,7 +16,11 @@ using namespace snk;
 using namespace food;
 using namespace listener;
 
+#if defined(_WIN32) || defined(_WIN64)
+#define _CLEAR system("cls")
+#else
 #define _CLEAR system("clear")
+#endif
 
 #define CHARACTER "||"
 
@@ -40,27 +45,34 @@ Board::Board()
 
 void Board::print()
 {
-  _CLEAR;
+  stringstream ss;
+
+  ss << "\033[0m" << "Score: " << '\n';
+
   for (int y = 0; y < H; ++y)
   {
     for (int x = 0; x < W; ++x)
     {
       if (board[y][x] == 1)
       {
-        cout << "\033[30;40m" << CHARACTER;
+        ss << "\033[30;40m" << CHARACTER;
       }
       else if (board[y][x] == 2)
       {
-        cout << "\033[31;41m" << CHARACTER;
+        ss << "\033[31;41m" << CHARACTER;
       }
       else
       {
-        cout << "\033[37;47m" << CHARACTER;
+        ss << "\033[37;47m" << CHARACTER;
       }
+      ss << "\033[0m" << flush;
     }
-    cout << '\n';
+    ss << '\n'
+       << flush;
   }
-  cout << "\033[0m" << "Score: " << s.getScore();
+
+  _CLEAR;
+  cout << ss.str();
 }
 
 void Board::reset()
@@ -188,7 +200,10 @@ void Board::start(KeyListener *l)
       }
       break;
     case 'p':
-      sleep(5);
+      while (l->isEmpty())
+      {
+        usleep(1000);
+      }
       break;
     default:
       break;
