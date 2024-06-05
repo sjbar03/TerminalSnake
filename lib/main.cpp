@@ -1,21 +1,24 @@
 #include "board.h"
+#include "keylistener.h"
 
 #include <iostream>
 #include <fstream>
 #include <sstream>
 #include <iomanip>
 #include <string>
-#include <ncurses.h>
+#include <thread>
+#include <mutex>
+#include <unistd.h>
+
 using namespace brd;
 using namespace std;
+using namespace listener;
 
-#define ONE_KEY 49
-#define TWO_KEY 50
-#define THREE_KEY 51
-#define FOUR_KEY 52
-
-#define Y_KEY 121
-#define N_KEY 110
+#if defined(_WIN32) || defined(_WIN64)
+#define _CLEAR system("cls")
+#else
+#define _CLEAR system("clear")
+#endif
 
 std::vector<string> split(const string &s, char delim)
 {
@@ -31,54 +34,38 @@ std::vector<string> split(const string &s, char delim)
   return result;
 }
 
-string getstring()
+void play(KeyListener *l)
 {
-
-  string res;
-
-  int ch = getch();
-
-  while (ch != '\n')
-  {
-    res.push_back(ch);
-    ch = getch();
-  }
-
-  return res;
-}
-
-void play()
-{
-
   Board b = Board();
+  b.start(l);
 
-  b.start();
-
-  printw("\nWould you like to save this score? y/n\n");
-  nodelay(stdscr, false);
-
+  cout << "Would you like to save your score? y/n" << endl;
   bool answered = false;
 
+  string usr;
   while (!answered)
   {
-    switch (getch())
+    l->emptyQueue();
+    l->pause();
+    usleep(5000);
+    cout << '\r';
+    switch (l->pop())
     {
-    case (Y_KEY):
-      nocbreak();
-      echo();
-      printw("Enter your username: ");
-      b.recordScore(getstring());
+    case 'y':
+      cout << "Please enter your username" << endl;
+      cin >> usr;
+      b.recordScore(usr);
       answered = true;
       break;
-    case (N_KEY):
+    case 'n':
       answered = true;
       break;
     default:
       break;
     }
+    l->unpause();
+    usleep(5000);
   }
-
-  endwin();
 }
 
 bool compareEntry(vector<string> e1, vector<string> e2)
@@ -88,9 +75,9 @@ bool compareEntry(vector<string> e1, vector<string> e2)
   return e1s > e2s;
 }
 
-void printRecord()
+void printRecord(KeyListener *l)
 {
-  clear();
+  _CLEAR;
   string line;
 
   ifstream scores("data/scores.csv");
@@ -120,8 +107,13 @@ void printRecord()
   scores.close();
 
   string s = ss.str();
-  printw(s.c_str());
-  getch();
+  cout << s;
+  l->emptyQueue();
+  while (l->isEmpty())
+  {
+    usleep(1000);
+  }
+  _CLEAR;
 }
 
 string center(int w, string text)
@@ -140,7 +132,7 @@ string center(int w, string text)
   return res + text;
 }
 
-void printUsage()
+void printUsage(KeyListener *l)
 {
   string line;
   ifstream help("data/help.txt");
@@ -151,84 +143,79 @@ void printUsage()
   {
     if (i < 10)
     {
-      printw((center(80, line)).c_str());
+      cout << ((center(80, line)).c_str());
     }
     else
     {
-      printw(line.c_str());
+      cout << (line.c_str());
     }
-    printw("\n");
-    refresh();
+    cout << ("\n");
     i++;
   }
-  getch();
+
   help.close();
-  clear();
+  l->emptyQueue();
+  while (l->isEmpty())
+  {
+    usleep(1000);
+  }
+  _CLEAR;
 }
 
-void menu()
+void menu(KeyListener *l)
 {
-  initscr();
-
-  start_color();
-  init_pair(1, COLOR_BLACK, COLOR_BLACK);
-  init_pair(2, COLOR_WHITE, COLOR_WHITE);
-  init_pair(3, COLOR_RED, COLOR_RED);
-
-  cbreak();
-  noecho();
-  nodelay(stdscr, false);
-
   string line;
   ifstream logo("data/logo.txt");
 
   while (getline(logo, line))
   {
-    printw((center(80, line)).c_str());
-    printw("\n");
-    refresh();
+    cout << (line.c_str());
+    cout << '\n';
   }
   logo.close();
 
-  switch (getch())
+  l->quitIf('4');
+
+  switch (l->pop())
   {
-  case ONE_KEY:
-    clear();
-    nodelay(stdscr, true);
-    play();
-    clear();
-    nodelay(stdscr, false);
-    menu();
+  case '1':
+    _CLEAR;
+    l->quitIf(-1);
+    play(l);
+    _CLEAR;
+    menu(l);
     break;
-  case TWO_KEY:
-    clear();
-    printRecord();
-    clear();
-    menu();
+  case '2':
+    _CLEAR;
+    l->quitIf(-1);
+    printRecord(l);
+    _CLEAR;
+    menu(l);
     break;
-  case THREE_KEY:
-    clear();
-    printUsage();
-    menu();
-  case FOUR_KEY:
+  case '3':
+    _CLEAR;
+    l->quitIf(-1);
+    printUsage(l);
+    menu(l);
+  case '4':
+    l->stop();
     break;
   default:
-    clear();
-    menu();
+    usleep(40000);
+    _CLEAR;
+    menu(l);
     break;
   }
-  clear();
-  endwin();
-}
-
-void test()
-{
-  initscr();
-  cout << getch();
-  endwin();
+  _CLEAR;
 }
 
 int main()
 {
-  menu();
+  KeyListener l = KeyListener();
+
+  thread worker = thread(&menu, &l);
+
+  l.start();
+
+  worker.join();
 }

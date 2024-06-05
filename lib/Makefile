@@ -1,7 +1,7 @@
-OBJ = main.o board.o snake.o food.o
+OBJ = main.o board.o snake.o food.o keylistener.o
 STD = -std=c++20
-LFLAG = -lncurses
-CC = clang++
+LFLAG =
+CC = g++
 
 
 snake : $(OBJ)
@@ -18,6 +18,9 @@ snake.o: snake.cpp
 
 food.o: food.cpp
 	$(CC) -c food.cpp $(STD)
+
+keylistener.o: keylistener.cpp
+	$(CC) -c keylistener.cpp $(STD)
 
 clean:
 	rm snake $(OBJ)

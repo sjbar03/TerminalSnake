@@ -54,28 +54,56 @@ char get_unbuffered_input()
   return ch;
 }
 
-void KeyListener::start(int id)
+void KeyListener::start()
 {
   listening = true;
-  listen(id);
+  listen();
 }
 
-void KeyListener::stop(std::thread *pt)
+void KeyListener::stop()
 {
   listening = false;
-  (*pt).join();
 }
 
-void KeyListener::listen(int tId)
+void KeyListener::pause()
 {
-  std::cout << "Reached listen() on thread: " << tId << std::endl;
+  paused = true;
+}
+
+void KeyListener::unpause()
+{
+  paused = false;
+}
+
+void KeyListener::quitIf(char ch)
+{
+  quitCh = ch;
+}
+
+void KeyListener::listen()
+{
   while (isListening())
   {
+    while (paused)
+    {
+      usleep(50000);
+    }
     char ch = get_unbuffered_input();
     queueLock.lock();
     inputQueue.push_back(ch);
     queueLock.unlock();
+    if (quitCh == ch)
+    {
+      listening = false;
+    }
   }
+}
+
+void KeyListener::emptyQueue()
+{
+  queueLock.lock();
+  inputQueue.erase(inputQueue.begin(), inputQueue.end());
+  queueLock.unlock();
 }
 
 bool KeyListener::isEmpty()

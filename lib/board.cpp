@@ -1,17 +1,22 @@
 #include "board.h"
 #include "snake.h"
 #include "food.h"
+#include "keylistener.h"
 #include <tuple>
 #include <chrono>
 #include <fstream>
-#include <ncurses.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include <iostream>
 
 using namespace std;
 using namespace brd;
 using namespace snk;
 using namespace food;
+using namespace listener;
+
+#define _CLEAR system("clear")
+
 #define CHARACTER "||"
 
 #define H 40
@@ -21,13 +26,6 @@ using namespace food;
 #define EAST 1
 #define SOUTH 2
 #define WEST 3
-
-#define W_KEY 119
-#define A_KEY 97
-#define S_KEY 115
-#define D_KEY 100
-
-#define P_KEY 112
 
 int board[H][W];
 vector<int> inputBuffer;
@@ -42,33 +40,27 @@ Board::Board()
 
 void Board::print()
 {
-  clear();
+  _CLEAR;
   for (int y = 0; y < H; ++y)
   {
     for (int x = 0; x < W; ++x)
     {
       if (board[y][x] == 1)
       {
-        attron(COLOR_PAIR(1));
-        printw(CHARACTER);
-        attroff(COLOR_PAIR(1));
+        cout << "\033[30;40m" << CHARACTER;
       }
       else if (board[y][x] == 2)
       {
-        attron(COLOR_PAIR(3));
-        printw(CHARACTER);
-        attroff(COLOR_PAIR(3));
+        cout << "\033[31;41m" << CHARACTER;
       }
       else
       {
-        attron(COLOR_PAIR(2));
-        printw(CHARACTER);
-        attroff(COLOR_PAIR(2));
+        cout << "\033[37;47m" << CHARACTER;
       }
     }
-    printw("\n");
+    cout << '\n';
   }
-  printw("Score: %i", s.getScore());
+  cout << "\033[0m" << "Score: " << s.getScore();
 }
 
 void Board::reset()
@@ -162,70 +154,60 @@ bool Board::isRunning()
   return running;
 }
 
-void Board::start()
+void Board::start(KeyListener *l)
 {
+
   running = true;
 
   while (isRunning())
   {
-    switch (getch())
+    switch (l->pop())
     {
-    case W_KEY:
+    case 'w':
       if (s.getDir() != SOUTH)
       {
-        inputBuffer.push_back(NORTH);
+        s.changeDir(NORTH);
       }
       break;
-    case A_KEY:
+    case 'a':
       if (s.getDir() != EAST)
       {
-        inputBuffer.push_back(WEST);
+        s.changeDir(WEST);
       }
       break;
-    case S_KEY:
+    case 's':
       if (s.getDir() != NORTH)
       {
-        inputBuffer.push_back(SOUTH);
+        s.changeDir(SOUTH);
       }
       break;
-    case D_KEY:
+    case 'd':
       if (s.getDir() != WEST)
       {
-        inputBuffer.push_back(EAST);
+        s.changeDir(EAST);
       }
       break;
-    case P_KEY:
-      nodelay(stdscr, false);
-      getch();
-      nodelay(stdscr, true);
+    case 'p':
+      sleep(5);
       break;
     default:
       break;
     };
-
-    if (iterations % 40 == 0)
+    s.shift();
+    reset();
+    if (iterations % 24 == 0)
     {
-      if (!inputBuffer.empty())
-      {
-        s.changeDir(inputBuffer.front());
-        inputBuffer.erase(inputBuffer.begin());
-      }
-      s.shift();
-      reset();
-      if (iterations % 800 == 0)
-      {
-        f.spawnFood();
-      }
-      placeFood();
-      placeSnake(s);
-      checkFood();
-      print();
-      refresh();
+      f.spawnFood();
     }
+    placeFood();
+    placeSnake(s);
+    checkFood();
+    print();
 
     iterations += 1;
-    usleep(2500);
+    usleep(100000);
   }
+  cout << "\033[0m" << endl; // Change back to deafult color mode.
 }
 
 void Board::recordScore(string usr)

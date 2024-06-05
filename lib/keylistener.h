@@ -9,16 +9,22 @@ namespace listener
   class KeyListener
   {
   public:
-    void start(int);
-    void stop(std::thread *);
+    void start();
+    void stop();
+    void pause();
+    void unpause();
 
-    void listen(int);
+    void listen();
+    void emptyQueue();
+    void quitIf(char);
 
     bool isEmpty();
     bool isListening();
     char pop();
 
   private:
+    char quitCh;
+    bool paused;
     bool listening;
     std::vector<char> inputQueue;
     std::mutex queueLock;

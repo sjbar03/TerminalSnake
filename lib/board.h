@@ -3,6 +3,7 @@
 
 #include "snake.h"
 #include "food.h"
+#include "keylistener.h"
 #include <tuple>
 
 namespace brd
@@ -15,7 +16,7 @@ namespace brd
     void reset();
     void placeSnake(snk::Snake);
     void placeFood();
-    void start();
+    void start(listener::KeyListener *l);
     void checkFood();
     bool isRunning();
     void stop();
