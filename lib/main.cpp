@@ -41,8 +41,20 @@ string getString(KeyListener *l)
   while (l->next() != '\n')
   {
     ch = l->pop();
-    cout << ch << std::flush;
-    s += ch;
+
+    if ((int)ch == 127)
+    {
+      if (!s.empty())
+      {
+        cout << "\b \b" << flush;
+        s.pop_back();
+      }
+    }
+    else
+    {
+      cout << ch << std::flush;
+      s += ch;
+    }
 
     while (l->isEmpty())
     {

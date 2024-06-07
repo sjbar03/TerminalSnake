@@ -47,7 +47,7 @@ void Board::print()
 {
   stringstream ss;
 
-  ss << "\033[0m" << "Score: " << '\n';
+  ss << "\033[0m" << "Score: " << s.getScore() << '\n';
 
   for (int y = 0; y < H; ++y)
   {
