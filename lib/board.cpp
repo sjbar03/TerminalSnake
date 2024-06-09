@@ -45,6 +45,8 @@ Board::Board()
 
 void Board::print()
 {
+  cout << "\033[H";
+
   stringstream ss;
 
   ss << "\033[0m" << "Score: " << s.getScore() << '\n';
@@ -71,8 +73,7 @@ void Board::print()
        << flush;
   }
 
-  _CLEAR;
-  cout << ss.str();
+  cout << ss.str() << flush;
 }
 
 void Board::reset()
