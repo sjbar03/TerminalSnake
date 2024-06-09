@@ -101,11 +101,42 @@ void Board::placeSnake(Snake s)
   {
     int x = get<0>(s.get(i));
     int y = get<1>(s.get(i));
-    if (board[y][x] == 1)
+    board[y][x] = 1;
+  }
+}
+
+void Board::checkHit(Snake s)
+{
+  Coord currPos = s.loc();
+  int currx = get<0>(currPos);
+  int curry = get<1>(currPos);
+
+  switch (s.getDir())
+  {
+  case (NORTH):
+    if (board[curry - 1][currx] == 1)
     {
       stop();
     }
-    board[y][x] = 1;
+    break;
+  case (EAST):
+    if (board[curry][currx + 1] == 1)
+    {
+      stop();
+    }
+    break;
+  case (SOUTH):
+    if (board[curry + 1][currx] == 1)
+    {
+      stop();
+    }
+    break;
+  case (WEST):
+    if (board[curry][currx - 1] == 1)
+    {
+      stop();
+    }
+    break;
   }
 }
 
@@ -209,6 +240,7 @@ void Board::start(KeyListener *l)
     default:
       break;
     };
+    checkHit(s);
     s.shift();
     reset();
     if (iterations % 24 == 0)

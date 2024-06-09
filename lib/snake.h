@@ -17,6 +17,7 @@ namespace snk
     void shift();
     void grow();
     int size();
+    Coord loc();
     void replace_at(int, Coord);
     Coord get(int);
     void changeDir(int);

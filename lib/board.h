@@ -15,6 +15,7 @@ namespace brd
     void print();
     void reset();
     void placeSnake(snk::Snake);
+    void checkHit(snk::Snake);
     void placeFood();
     void start(listener::KeyListener *l);
     void checkFood();

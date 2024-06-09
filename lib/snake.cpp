@@ -104,3 +104,8 @@ int Snake::getScore()
 {
   return score;
 }
+
+Coord Snake::loc()
+{
+  return snake[0];
+}
