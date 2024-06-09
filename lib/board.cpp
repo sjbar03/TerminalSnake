@@ -16,21 +16,27 @@ using namespace snk;
 using namespace food;
 using namespace listener;
 
-#if defined(_WIN32) || defined(_WIN64)
-#define _CLEAR system("cls")
-#else
-#define _CLEAR system("clear")
-#endif
-
+// Character for graphics
 #define CHARACTER "||"
 
+// Board dimensions
 #define H 40
 #define W 40
 
+// SNAKE directions
 #define NORTH 0
 #define EAST 1
 #define SOUTH 2
 #define WEST 3
+
+// ANSI color codes
+#define WHITE "\033[37;47m"
+#define BLACK "\033[30;40m"
+#define RED "\033[31;41m"
+#define _DEFAULT "\033[0m"
+
+// ANSI position codes
+#define HOME "\033[H"
 
 int board[H][W];
 vector<int> inputBuffer;
@@ -45,11 +51,11 @@ Board::Board()
 
 void Board::print()
 {
-  cout << "\033[H";
+  cout << HOME;
 
   stringstream ss;
 
-  ss << "\033[0m" << "Score: " << s.getScore() << '\n';
+  ss << _DEFAULT << "Score: " << s.getScore() << '\n';
 
   for (int y = 0; y < H; ++y)
   {
@@ -57,17 +63,17 @@ void Board::print()
     {
       if (board[y][x] == 1)
       {
-        ss << "\033[30;40m" << CHARACTER;
+        ss << BLACK << CHARACTER;
       }
       else if (board[y][x] == 2)
       {
-        ss << "\033[31;41m" << CHARACTER;
+        ss << RED << CHARACTER;
       }
       else
       {
-        ss << "\033[37;47m" << CHARACTER;
+        ss << WHITE << CHARACTER;
       }
-      ss << "\033[0m" << flush;
+      ss << _DEFAULT << flush;
     }
     ss << '\n'
        << flush;
@@ -255,7 +261,7 @@ void Board::start(KeyListener *l)
     iterations += 1;
     usleep(100000);
   }
-  cout << "\033[0m" << endl; // Change back to deafult color mode.
+  cout << _DEFAULT << endl; // Change back to deafult color mode.
 }
 
 void Board::recordScore(string usr)

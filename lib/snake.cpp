@@ -2,6 +2,7 @@
 #include <tuple>
 using namespace snk;
 
+// Snake directions
 #define NORTH 0
 #define EAST 1
 #define SOUTH 2
@@ -78,11 +79,6 @@ void Snake::shift()
 int Snake::size()
 {
   return SNAKE_SIZE;
-}
-
-void Snake::replace_at(int i, Coord c)
-{
-  snake[i] = c;
 }
 
 Coord Snake::get(int i)
