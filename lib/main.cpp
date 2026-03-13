@@ -198,6 +198,8 @@ void menu(KeyListener *l)
   string line;
   ifstream logo("data/logo.txt");
 
+  _CLEAR;
+
   while (getline(logo, line))
   {
     cout << (line.c_str());
@@ -206,6 +208,11 @@ void menu(KeyListener *l)
   logo.close();
 
   l->quitIf('4');
+
+  while (l->isEmpty())
+  {
+      usleep(1000);
+  }
 
   switch (l->pop())
   {
@@ -233,7 +240,7 @@ void menu(KeyListener *l)
     break;
   default:
     usleep(40000);
-    _CLEAR;
+    //_CLEAR;
     menu(l);
     break;
   }
